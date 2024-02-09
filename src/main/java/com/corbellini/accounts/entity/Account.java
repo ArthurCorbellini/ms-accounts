@@ -4,21 +4,23 @@ import com.corbellini.accounts.entity.base.BaseEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account extends BaseEntity {
 
   @Id
   private Long accountNumber;
-
   private Long customerId;
-
   private String accountType;
-
   private String branchAddress;
-
 }
