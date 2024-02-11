@@ -1,7 +1,6 @@
 package com.corbellini.accounts.entity.base;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;

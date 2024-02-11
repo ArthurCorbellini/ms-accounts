@@ -1,7 +1,6 @@
 package com.corbellini.accounts.entity;
 
 import com.corbellini.accounts.entity.base.BaseEntity;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

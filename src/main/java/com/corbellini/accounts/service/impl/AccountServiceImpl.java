@@ -2,19 +2,19 @@ package com.corbellini.accounts.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.Random;
-
 import org.springframework.stereotype.Service;
-
 import com.corbellini.accounts.constants.AccountConstants;
+import com.corbellini.accounts.dto.AccountDto;
 import com.corbellini.accounts.dto.CustomerDto;
 import com.corbellini.accounts.entity.Account;
 import com.corbellini.accounts.entity.Customer;
 import com.corbellini.accounts.exception.CustomerAlreadyExistsException;
+import com.corbellini.accounts.exception.ResourceNotFoundException;
+import com.corbellini.accounts.mapper.AccountMapper;
 import com.corbellini.accounts.mapper.CustomerMapper;
 import com.corbellini.accounts.repository.AccountRepository;
 import com.corbellini.accounts.repository.CustomerRepository;
 import com.corbellini.accounts.service.IAccountService;
-
 import lombok.AllArgsConstructor;
 
 @Service
@@ -39,6 +39,7 @@ public class AccountServiceImpl implements IAccountService {
   }
 
   /**
+   * 
    * @param customer - Customer Object
    * @return the new account details
    */
@@ -52,6 +53,21 @@ public class AccountServiceImpl implements IAccountService {
     newAccount.setCreatedBy("Anonymous");
 
     return newAccount;
+  }
+
+  @Override
+  public CustomerDto fetchAccount(String mobileNumber) {
+    Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+        .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
+
+    Account account = accountRepository.findByCustomerId(customer.getCustomerId())
+        .orElseThrow(() -> new ResourceNotFoundException("Account", "customerId",
+            customer.getCustomerId().toString()));
+
+    CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer, new CustomerDto());
+    customerDto.setAccountDto(AccountMapper.mapToAccountsDto(account, new AccountDto()));
+
+    return customerDto;
   }
 
 }
