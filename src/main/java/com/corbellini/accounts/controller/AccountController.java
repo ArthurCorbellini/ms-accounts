@@ -3,6 +3,7 @@ package com.corbellini.accounts.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,6 +44,17 @@ public class AccountController {
     } else {
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
           .body(new ResponseDto(AccountConstants.STATUS_417, AccountConstants.MESSAGE_417_UPDATE));
+    }
+  }
+
+  @DeleteMapping("/delete")
+  public ResponseEntity<ResponseDto> deleteAccountDetails(@RequestParam String mobileNumber) {
+    if (iAccountService.deleteAccount(mobileNumber)) {
+      return ResponseEntity.status(HttpStatus.OK)
+          .body(new ResponseDto(AccountConstants.STATUS_200, AccountConstants.MESSAGE_200));
+    } else {
+      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED)
+          .body(new ResponseDto(AccountConstants.STATUS_417, AccountConstants.MESSAGE_417_DELETE));
     }
   }
 }

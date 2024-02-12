@@ -14,6 +14,18 @@ import com.corbellini.accounts.exception.ResourceNotFoundException;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ResponseErrorDto> handleGlobalException(Exception exception,
+      WebRequest webRequest) {
+
+    // TODO send e-mail to dev team or save the error and its information in database Audit table;
+
+    ResponseErrorDto response = new ResponseErrorDto(webRequest.getDescription(false),
+        HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage(), LocalDateTime.now());
+
+    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
   @ExceptionHandler(CustomerAlreadyExistsException.class)
   public ResponseEntity<ResponseErrorDto> handleCustomerAlreadyExistsException(
       CustomerAlreadyExistsException exception, WebRequest webRequest) {
