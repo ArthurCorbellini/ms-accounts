@@ -1,14 +1,13 @@
 package com.corbellini.accounts.dto;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class AccountDto {
 
-  @NotEmpty(message = "Account number can not be a null or empty")
-  @Pattern(regexp = "(^$|[0-9]{10})", message = "AccountNumber must be 10 digits")
+  @NotNull(message = "Account number can not be a null or empty")
   private Long accountNumber;
 
   @NotEmpty(message = "Account type can not be a null or empty")
