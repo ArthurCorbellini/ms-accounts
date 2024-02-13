@@ -1,6 +1,5 @@
 package com.corbellini.accounts.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.Random;
 import org.springframework.stereotype.Service;
 import com.corbellini.accounts.constants.AccountConstants;
@@ -32,8 +31,6 @@ public class AccountServiceImpl implements IAccountService {
       throw new CustomerAlreadyExistsException(
           "Customer already registered with given mobileNumber " + customerDto.getMobileNumber());
 
-    customer.setCreatedAt(LocalDateTime.now());
-    customer.setCreatedBy("Anonymous");
     Customer savedCustomer = customerRepository.save(customer);
     accountRepository.save(createNewAccount(savedCustomer));
   }
@@ -49,8 +46,6 @@ public class AccountServiceImpl implements IAccountService {
     newAccount.setAccountNumber(1000000000L + new Random().nextInt(900000000));
     newAccount.setAccountType(AccountConstants.SAVINGS);
     newAccount.setBranchAddress(AccountConstants.ADDRESS);
-    newAccount.setCreatedAt(LocalDateTime.now());
-    newAccount.setCreatedBy("Anonymous");
 
     return newAccount;
   }
