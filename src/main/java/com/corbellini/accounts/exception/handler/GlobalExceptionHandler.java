@@ -9,15 +9,16 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import com.corbellini.accounts.dto.ResponseErrorDto;
 import com.corbellini.accounts.exception.CustomerAlreadyExistsException;
 import com.corbellini.accounts.exception.ResourceNotFoundException;
 
-@ControllerAdvice
+// @ControllerAdvice // used when the handler methods returns other objects than ResponseEntity
+@RestControllerAdvice // used when the handler methods returns only ResponseEntity object
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   /**

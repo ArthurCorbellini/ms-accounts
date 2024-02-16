@@ -39,8 +39,12 @@ public class AccountController {
 
   @Operation(summary = "Create Account REST API",
       description = "REST API to create new Customer and Account")
-  @ApiResponse(responseCode = AccountConstants.STATUS_201,
-      description = AccountConstants.MESSAGE_201)
+  @ApiResponses({
+      @ApiResponse(responseCode = AccountConstants.STATUS_201,
+          description = AccountConstants.MESSAGE_201),
+      @ApiResponse(responseCode = AccountConstants.STATUS_500,
+          description = AccountConstants.MESSAGE_500,
+          content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
   @PostMapping("/create")
   public ResponseEntity<ResponseDto> createAccount(@RequestBody @Valid CustomerDto customerDto) {
     iAccountService.createAccount(customerDto);
@@ -50,8 +54,12 @@ public class AccountController {
 
   @Operation(summary = "Read Account REST API",
       description = "REST API to read Customer and Account based on a mobile number")
-  @ApiResponse(responseCode = AccountConstants.STATUS_200,
-      description = AccountConstants.MESSAGE_200)
+  @ApiResponses({
+      @ApiResponse(responseCode = AccountConstants.STATUS_200,
+          description = AccountConstants.MESSAGE_200),
+      @ApiResponse(responseCode = AccountConstants.STATUS_500,
+          description = AccountConstants.MESSAGE_500,
+          content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
   @GetMapping("/fetch")
   public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam @Pattern(
       regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits") String mobileNumber) {
@@ -63,6 +71,8 @@ public class AccountController {
   @ApiResponses({
       @ApiResponse(responseCode = AccountConstants.STATUS_200,
           description = AccountConstants.MESSAGE_200),
+      @ApiResponse(responseCode = AccountConstants.STATUS_417,
+          description = AccountConstants.MESSAGE_417_UPDATE),
       @ApiResponse(responseCode = AccountConstants.STATUS_500,
           description = AccountConstants.MESSAGE_500,
           content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
@@ -83,6 +93,8 @@ public class AccountController {
   @ApiResponses({
       @ApiResponse(responseCode = AccountConstants.STATUS_200,
           description = AccountConstants.MESSAGE_200),
+      @ApiResponse(responseCode = AccountConstants.STATUS_417,
+          description = AccountConstants.MESSAGE_417_DELETE),
       @ApiResponse(responseCode = AccountConstants.STATUS_500,
           description = AccountConstants.MESSAGE_500,
           content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
