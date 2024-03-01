@@ -1,5 +1,7 @@
 package com.corbellini.accounts.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +27,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
 
 @Tag(name = "CRUD REST API for Accounts",
     description = "CREATE, READ, UPDATE and DELETE accounts details")
 @RestController
 @Validated
-@AllArgsConstructor
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AccountController {
 
+  @Autowired
   private IAccountService iAccountService;
+
+  @Value("${build.version}")
+  private String buildVersion;
 
   @Operation(summary = "Create Account REST API",
       description = "REST API to create new Customer and Account")
@@ -109,4 +113,18 @@ public class AccountController {
           .body(new ResponseDto(AccountConstants.STATUS_417, AccountConstants.MESSAGE_417_DELETE));
     }
   }
+
+  @Operation(summary = "Get build information",
+      description = "Get build information that is deployed into accounts microservice")
+  @ApiResponses({
+      @ApiResponse(responseCode = AccountConstants.STATUS_200,
+          description = AccountConstants.MESSAGE_200),
+      @ApiResponse(responseCode = AccountConstants.STATUS_500,
+          description = AccountConstants.MESSAGE_500,
+          content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
+  @GetMapping("/build-info")
+  public ResponseEntity<String> getBuildInfo() {
+    return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+  }
+
 }
