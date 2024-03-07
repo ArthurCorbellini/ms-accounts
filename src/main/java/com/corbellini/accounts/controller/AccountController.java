@@ -2,6 +2,7 @@ package com.corbellini.accounts.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.corbellini.accounts.config.EnvironmentConfig;
 import com.corbellini.accounts.constants.AccountConstants;
 import com.corbellini.accounts.dto.CustomerDto;
 import com.corbellini.accounts.dto.ResponseDto;
@@ -40,6 +42,12 @@ public class AccountController {
 
   @Value("${build.version}")
   private String buildVersion;
+
+  @Autowired
+  private Environment environment;
+
+  @Autowired
+  private EnvironmentConfig environmentConfig;
 
   @Operation(summary = "Create Account REST API",
       description = "REST API to create new Customer and Account")
@@ -127,4 +135,28 @@ public class AccountController {
     return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
   }
 
+  @Operation(summary = "Get Java version", description = "Get Java version of enviroment")
+  @ApiResponses({
+      @ApiResponse(responseCode = AccountConstants.STATUS_200,
+          description = AccountConstants.MESSAGE_200),
+      @ApiResponse(responseCode = AccountConstants.STATUS_500,
+          description = AccountConstants.MESSAGE_500,
+          content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
+  @GetMapping("/java-version")
+  public ResponseEntity<String> getJavaVersion() {
+    return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+  }
+
+  @Operation(summary = "Get Contact Info",
+      description = "Contact Info details that can be reached out in case of any issues")
+  @ApiResponses({
+      @ApiResponse(responseCode = AccountConstants.STATUS_200,
+          description = AccountConstants.MESSAGE_200),
+      @ApiResponse(responseCode = AccountConstants.STATUS_500,
+          description = AccountConstants.MESSAGE_500,
+          content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
+  @GetMapping("/contact-info")
+  public ResponseEntity<EnvironmentConfig> getContactInfo() {
+    return ResponseEntity.status(HttpStatus.OK).body(environmentConfig);
+  }
 }
