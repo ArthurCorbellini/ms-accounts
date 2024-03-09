@@ -1,1 +1,3 @@
-# Spring Boot Demo Bank - Microservice - Accounts | sbdb-ms-accounts
+# Spring Boot Demo Bank - Microservice - Accounts 
+
+- Project: sbdb-ms-accounts
