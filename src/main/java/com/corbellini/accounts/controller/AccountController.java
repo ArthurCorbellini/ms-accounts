@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.corbellini.accounts.config.EnvironmentConfig;
+import com.corbellini.accounts.cfg.AccountsEnvironments;
 import com.corbellini.accounts.constants.AccountConstants;
 import com.corbellini.accounts.dto.CustomerDto;
 import com.corbellini.accounts.dto.ResponseDto;
@@ -47,7 +47,7 @@ public class AccountController {
   private Environment environment;
 
   @Autowired
-  private EnvironmentConfig environmentConfig;
+  private AccountsEnvironments environmentConfig;
 
   @Operation(summary = "Create Account REST API",
       description = "REST API to create new Customer and Account")
@@ -156,7 +156,7 @@ public class AccountController {
           description = AccountConstants.MESSAGE_500,
           content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
   @GetMapping("/contact-info")
-  public ResponseEntity<EnvironmentConfig> getContactInfo() {
+  public ResponseEntity<AccountsEnvironments> getContactInfo() {
     return ResponseEntity.status(HttpStatus.OK).body(environmentConfig);
   }
 }
