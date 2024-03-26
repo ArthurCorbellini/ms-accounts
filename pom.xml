@@ -9,8 +9,8 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
-  <groupId>com.corbellini</groupId>
-  <artifactId>accounts</artifactId>
+  <groupId>com.artcorb</groupId>
+  <artifactId>sbdb-ms-accounts</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
