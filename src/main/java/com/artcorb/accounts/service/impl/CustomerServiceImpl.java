@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements ICustomerService {
   private LoansFeignClient loansFeignClient;
 
   @Override
-  public CustomerDetailsDto fetchCustomerDetails(String mobileNumber) {
+  public CustomerDetailsDto fetchCustomerDetails(String correlationId, String mobileNumber) {
     Customer customer = customerRepository.findByMobileNumber(mobileNumber)
         .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
     CustomerDetailsDto customerDetailsDto =
@@ -42,9 +42,11 @@ public class CustomerServiceImpl implements ICustomerService {
     // Will connect with Eureka Server and try to get the loans instance details. For this, it will
     // performe some load balancing and invoke the actual mocroservice api and we'll get the
     // response.
-    ResponseEntity<LoanDto> loanDtoResponseEntity = loansFeignClient.fetchLoanDetails(mobileNumber);
+    ResponseEntity<LoanDto> loanDtoResponseEntity =
+        loansFeignClient.fetchLoanDetails(correlationId, mobileNumber);
     customerDetailsDto.setLoanDto(loanDtoResponseEntity.getBody());
-    ResponseEntity<CardDto> cardDtoResponseEntity = cardsFeignClient.fetchCardDetails(mobileNumber);
+    ResponseEntity<CardDto> cardDtoResponseEntity =
+        cardsFeignClient.fetchCardDetails(correlationId, mobileNumber);
     customerDetailsDto.setCardDto(cardDtoResponseEntity.getBody());
 
     return customerDetailsDto;
