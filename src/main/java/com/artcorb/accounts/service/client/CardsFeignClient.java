@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.artcorb.accounts.dto.CardDto;
+import com.artcorb.accounts.service.client.fallback.CardsFallback;
 import com.artcorb.accounts.util.FilterUtil;
 
-@FeignClient("cards")
+@FeignClient(name = "cards", fallback = CardsFallback.class)
 public interface CardsFeignClient {
 
   @GetMapping(value = "/api/fetch", consumes = MediaType.APPLICATION_JSON_VALUE)
