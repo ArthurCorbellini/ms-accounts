@@ -89,4 +89,9 @@ resilience4j:
         exponential-backoff-multiplier: 2
         ignore-exceptions: # ignore retry if the list of exceptions below occurs
           - java.lang.NullPointerException
-      
+  ratelimiter: # Rate limiter pattern (allows a specific number of requests for a certain period of time).
+    configs:
+      default:
+        timeout-duration: 1000 
+        limit-refresh-period: 5000
+        limit-for-period: 1

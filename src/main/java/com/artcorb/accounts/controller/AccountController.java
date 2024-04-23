@@ -23,6 +23,7 @@ import com.artcorb.accounts.dto.CustomerDto;
 import com.artcorb.accounts.dto.ResponseDto;
 import com.artcorb.accounts.dto.ResponseErrorDto;
 import com.artcorb.accounts.service.IAccountService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -142,8 +143,10 @@ public class AccountController {
   }
 
   public ResponseEntity<String> getBuildInfoFallback(Throwable throwable) {
+    // TODO send the information from the cache, or send a error message.
     logger.debug("getBuildInfoFallback method called");
-    return ResponseEntity.status(HttpStatus.OK).body("fallback called");
+    return ResponseEntity.status(HttpStatus.OK)
+        .body("v1.0.0 - Fallback called - cached information");
   }
 
   @Operation(summary = "Get Java version", description = "Get Java version of enviroment")
@@ -153,9 +156,16 @@ public class AccountController {
       @ApiResponse(responseCode = AccountConstants.STATUS_500,
           description = AccountConstants.MESSAGE_500,
           content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
+  @RateLimiter(name = "getJavaVersion", fallbackMethod = "getJavaVersionFallback")
   @GetMapping("/java-version")
   public ResponseEntity<String> getJavaVersion() {
     return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+  }
+
+  public ResponseEntity<String> getJavaVersionFallback(Throwable throwable) {
+    // TODO send the information from the cache, or send a error message.
+    return ResponseEntity.status(HttpStatus.OK)
+        .body("Java 17 - Fallback called - cached information");
   }
 
   @Operation(summary = "Get Contact Info",
