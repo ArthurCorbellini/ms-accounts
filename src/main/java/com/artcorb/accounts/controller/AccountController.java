@@ -1,5 +1,7 @@
 package com.artcorb.accounts.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -21,6 +23,7 @@ import com.artcorb.accounts.dto.CustomerDto;
 import com.artcorb.accounts.dto.ResponseDto;
 import com.artcorb.accounts.dto.ResponseErrorDto;
 import com.artcorb.accounts.service.IAccountService;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,6 +39,8 @@ import jakarta.validation.constraints.Pattern;
 @Validated
 @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class AccountController {
+
+  private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
   @Autowired
   private IAccountService iAccountService;
@@ -130,9 +135,15 @@ public class AccountController {
       @ApiResponse(responseCode = AccountConstants.STATUS_500,
           description = AccountConstants.MESSAGE_500,
           content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))})
+  @Retry(name = "getBuildInfo", fallbackMethod = "getBuildInfoFallback")
   @GetMapping("/build-info")
   public ResponseEntity<String> getBuildInfo() {
     return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+  }
+
+  public ResponseEntity<String> getBuildInfoFallback(Throwable throwable) {
+    logger.debug("getBuildInfoFallback method called");
+    return ResponseEntity.status(HttpStatus.OK).body("fallback called");
   }
 
   @Operation(summary = "Get Java version", description = "Get Java version of enviroment")
