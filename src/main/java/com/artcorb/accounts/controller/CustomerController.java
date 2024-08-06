@@ -49,11 +49,10 @@ public class CustomerController {
       @RequestHeader(FilterUtil.CORRELATION_ID) String correlationId,
       @RequestParam @Pattern(regexp = "(^$|[0-9]{10})",
           message = "Mobile number must be 10 digits") String mobileNumber) {
-
-    logger.debug(FilterUtil.CORRELATION_ID + " found: {} ", correlationId);
-
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(iCustomerService.fetchCustomerDetails(correlationId, mobileNumber));
+    logger.debug("fetchCustomerDetails method start");
+    CustomerDetailsDto dto = iCustomerService.fetchCustomerDetails(correlationId, mobileNumber);
+    logger.debug("fetchCustomerDetails method end");
+    return ResponseEntity.status(HttpStatus.OK).body(dto);
   }
 
 }
